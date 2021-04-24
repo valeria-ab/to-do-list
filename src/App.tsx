@@ -13,7 +13,7 @@ export type TodoListType = {
     filter: FilterValuesType
 }
 
-type TasksStateType = {
+export type TasksStateType = {
     // объект может иметь свойства-ключи, которые строковые
     // (а ключи вообще в объекте и не могут быть иными),
     // а вот значения этих св-в это массив объектов TaskPropsType
@@ -21,12 +21,7 @@ type TasksStateType = {
 }
 
 function App() {
-    /*   let [tasks, setTasks] = useState([
-           {id: v1(), title: 'HTML&CSS', isDone: true},
-           {id: v1(), title: 'JS', isDone: true},
-           {id: v1(), title: 'React', isDone: false},
-           {id: v1(), title: 'RestAPI', isDone: false}
-       ])*/
+
     let todoList1 = v1()
     let todoList2 = v1()
 
