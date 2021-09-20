@@ -1,6 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {IconButton, TextField} from "@material-ui/core";
-import {AddBox} from "@material-ui/icons";
+import {AddBox, ControlPoint} from "@material-ui/icons";
 
 type AddItemFormPropsType = {
     addItem: (title: string) => void
@@ -8,19 +8,24 @@ type AddItemFormPropsType = {
 
 export function AddItemForm(props: AddItemFormPropsType) {
     let [title, setTitle] = useState('')
-    let [error, setError] = useState('')
+    //let [error, setError] = useState('')
 
-    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setError('')
+    const [error, setError] = useState<null | string>(null)
+
+    const trimmedTitle = title.trim()
+
+    const inputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        setError(null)
         setTitle(e.currentTarget.value)
     };
     const addItem = () => {
-        if (title.trim() === '') {
+        if (trimmedTitle) {
+            props.addItem(trimmedTitle);
+            setTitle('')
+        } else {
             setError('Название не может быть пустым')
-            return
         }
-        props.addItem(title.trim());
-        setTitle('')
+
     }
 
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -36,7 +41,7 @@ export function AddItemForm(props: AddItemFormPropsType) {
                 variant={"outlined"}
                 label={'Введите название задачи'}
                 value={title}
-                onChange={onChangeHandler}
+                onChange={inputChangeHandler}
                 onKeyPress={onKeyPressHandler}
                 error={!!error}
                 helperText={error}
@@ -45,8 +50,10 @@ export function AddItemForm(props: AddItemFormPropsType) {
                 color={'primary'}
                 onClick={addItem}
             >
-                <AddBox />
+               {/* <AddBox />*/}
+                <ControlPoint />
             </IconButton>
         {/*    {error && <div className={'error-message'}>{error}</div>}*/}
-        </div>)
+        </div>
+    )
 }

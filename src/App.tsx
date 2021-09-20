@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import './App.css';
-import {TaskPropsType, TodoList} from './TodoList';
+import {TaskType, TodoList} from './TodoList';
 import {v1} from 'uuid';
 import {AddItemForm} from './AddItemForm';
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
@@ -17,7 +17,7 @@ export type TasksStateType = {
     // объект может иметь свойства-ключи, которые строковые
     // (а ключи вообще в объекте и не могут быть иными),
     // а вот значения этих св-в это массив объектов TaskPropsType
-    [key: string]: Array<TaskPropsType>
+    [key: string]: Array<TaskType>
 }
 
 function App() {
@@ -54,7 +54,7 @@ function App() {
         setTasks({...tasks})
     }
 
-    function changeTaskStatus(id: string, isDone: boolean, todoListID: string) {
+    function changeTaskStatus(todoListID: string, id: string, isDone: boolean) {
         let task = tasks[todoListID].find(t => t.id === id)
 
         if (task) {
@@ -63,7 +63,7 @@ function App() {
         }
     }
 
-    function changeFilter(value: FilterValuesType, todoListID: string) {
+    function changeFilter(todoListID: string, value: FilterValuesType) {
         let changedTodoList = todoLists.find(tl => tl.id === todoListID);
         if (changedTodoList) {
             changedTodoList.filter = value
@@ -92,7 +92,7 @@ function App() {
         }
     }
 
-    function changeTodoListTitle(newTitle: string, todoListID: string) {
+    function changeTodoListTitle(todoListID: string, newTitle: string) {
         let todolist = todoLists.find(t => t.id === todoListID)
 
         if (todolist) {
@@ -147,8 +147,8 @@ function App() {
                                                 changeFilter={changeFilter}
                                                 changeTaskStatus={changeTaskStatus}
                                                 changeTaskTitle={changeTaskTitle}
-                                                changeTodoListTitle={changeTodoListTitle}
-                                                removeTodoList={removeTodoList}
+                                                changeTodolistTitle={changeTodoListTitle}
+                                                removeTodolist={removeTodoList}
                                                 filter={tl.filter}
                                             />
                                         </Paper>

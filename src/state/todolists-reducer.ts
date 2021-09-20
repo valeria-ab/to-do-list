@@ -1,7 +1,7 @@
 import {FilterValuesType, TodoListType} from "../App";
 import {v1} from "uuid";
 
-type ActionTypes =
+type ActionsType =
     RemoveTodolistActionType
     | AddTodolistActionType
     | ChangeTodolistTitleActionType
@@ -28,10 +28,10 @@ export type ChangeTodolistFilterActionType = {
 }
 
 
-// меня вызовут и дадут мне стейт (почти всегда объект)
-// и инструкцию (action, тоже объект)
-// согласно прописаному type в этом action (инструкции) я поменяю state
-export const todolistsReducer = (state: Array<TodoListType>, action: ActionTypes): Array<TodoListType> => {
+const initialState: Array<TodoListType> = []
+
+//когда при инициализации приложения стейта ещё не будет, возьми initialState
+export const todolistsReducer = (state: Array<TodoListType> = initialState, action: ActionsType): Array<TodoListType> => {
     switch (action.type) {
 
         case 'REMOVE-TODOLIST': {
@@ -59,8 +59,7 @@ export const todolistsReducer = (state: Array<TodoListType>, action: ActionTypes
             return endState;
         }
 
-        default:
-            throw new Error("I don't understand this type")
+        default: return state
     }
 }
 
