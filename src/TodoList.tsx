@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {FilterValuesType} from './App';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
-import {Button, Checkbox, IconButton} from '@material-ui/core';
-import {CheckBox, Delete} from "@material-ui/icons";
-import {TasksStateType} from "./AppWithRedux";
+import {Button, IconButton} from '@material-ui/core';
+import {Delete} from "@material-ui/icons";
+import {Task} from "./Task";
 
 type TodoListPropsType = {
     id: string
@@ -26,32 +26,44 @@ export type TaskType = {
     isDone: boolean
 }
 
-export function TodoList(props: TodoListPropsType) {
+export const TodoList = React.memo(function (props: TodoListPropsType) {
 
-    const addTask = (title: string) => {
+    console.log("TodoList")
+
+    const addTask = useCallback((title: string) => {
         props.addTask(props.id, title)
-    }
+    }, [props.addTask, props.id])
+
     const removeTodoList = () => {
         props.removeTodolist(props.id)
     }
 
-    const onAllClickHandler = () => {
+    const onAllClickHandler = useCallback(() => {
         props.changeFilter(props.id, 'all')
-    }
-    const onActiveClickHandler = () => {
+    }, [props.changeFilter, props.id])
+    const onActiveClickHandler = useCallback(() => {
         props.changeFilter(props.id, 'active')
-    }
-    const onCompletedClickHandler = () => {
+    }, [props.changeFilter, props.id])
+    const onCompletedClickHandler = useCallback(() => {
         props.changeFilter(props.id, 'completed')
-    }
+    }, [props.changeFilter, props.id])
 
+
+    let tasksForTodolist = props.tasks
+
+    if (props.filter === "active") {
+        tasksForTodolist = props.tasks.filter(t => t.isDone === false)
+    }
+    if (props.filter === "completed") {
+        tasksForTodolist = props.tasks.filter(t => t.isDone === true)
+    }
 
     return (
         <div>
             <h3><EditableSpan title={props.title} onChange={
-                (newValue) => {
-                    props.changeTodolistTitle(props.id, newValue )
-                }
+                useCallback((newValue) => {
+                    props.changeTodolistTitle(props.id, newValue)
+                }, [ props.changeTodolistTitle,props.id ])
             }/>
                 <IconButton onClick={removeTodoList}>
                     <Delete/>
@@ -63,20 +75,15 @@ export function TodoList(props: TodoListPropsType) {
 
             <div>
                 {
-                    props.tasks.map(t => <div key={t.id} className={t.isDone ? 'is-done' : ''}>
-                        <Checkbox
-                            color={'secondary'}
-                            checked={t.isDone}
-                            onChange={(e) =>
-                                props.changeTaskStatus(props.id, t.id, e.currentTarget.checked)}
-                        />
-                        <EditableSpan title={t.title} onChange={
-                            (newValue) => props.changeTaskTitle(props.id, t.id, newValue )
-                        }/>
-                        <IconButton onClick={() => props.removeTask(props.id, t.id)}>
-                            <Delete/>
-                        </IconButton>
-                    </div>)
+                    tasksForTodolist.map(t => <Task key={t.id}
+                                                    taskId={t.id}
+                                                    title={t.title}
+                                                    isDone={t.isDone}
+                                                    todolistId={props.id}
+                                                    changeTaskStatus={props.changeTaskStatus}
+                                                    changeTaskTitle={props.changeTaskTitle}
+                                                    removeTask={props.removeTask}
+                    />)
                 }
 
             </div>
@@ -97,5 +104,5 @@ export function TodoList(props: TodoListPropsType) {
             </div>
         </div>
     )
-}
+})
 
